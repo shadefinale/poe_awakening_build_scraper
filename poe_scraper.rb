@@ -14,7 +14,7 @@ class POEScraper
     }
 
   # If the thread contains one of these words we assume it is not a guide.
-  @@banned_words = ["help", "question", "input", "someone"]
+  @@banned_words = ["help", "question", "input", "someone", "?", "theorycraft", "1.3", "discussion"]
 
   def initialize
     @agent = Mechanize.new
@@ -42,7 +42,7 @@ class POEScraper
     threads.each do |thread|
       info = generate_info(thread)
       unless already_scraped?(csv_contents, info[:title])
-        csv_file << [info[:title], info[:link]]
+        csv_file << [info[:title], info[:link], info[:author]]
       end
     end
     csv_file.close
@@ -68,6 +68,7 @@ class POEScraper
     info = {}
     info[:title] = thread.search(".title").text
     info[:link] = ("http://www.pathofexile.com" + thread.search("a")[0]["href"])[0..-6]
+    info[:author] = thread.search(".postBy").search("a")[0].text
     info
   end
 
@@ -76,7 +77,7 @@ class POEScraper
   end
 
   def remove_irrelevant_threads(threads)
-    threads.reject{|thread| @@banned_words.any?{|word| thread.search(".title").text.include? (word)}}
+    threads.reject{|thread| @@banned_words.any?{|word| thread.search(".title").text.downcase.include? (word)}}
   end
 end
 
