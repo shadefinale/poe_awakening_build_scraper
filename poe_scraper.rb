@@ -41,7 +41,7 @@ class POEScraper
     csv_file = CSV.open(classname, "a+")
     threads.each do |thread|
       info = generate_info(thread)
-      unless already_scraped?(csv_contents, info[:title])
+      unless already_scraped?(csv_contents, info[:link])
         csv_file << [info[:title], info[:link], info[:author]]
       end
     end
@@ -58,9 +58,9 @@ class POEScraper
 
   # already_scraped? just sees if our result is already written to our file.
   # We only want to append guides that we haven't already scraped.
-  def already_scraped?(csv, title)
+  def already_scraped?(csv, link)
     return false if csv.empty?
-    csv.any? {|entry| entry[0].include?(title)}
+    csv.any? {|entry| entry[1].include?(link)}
   end
 
   # We take the thread element and scrape the information we want from it.
