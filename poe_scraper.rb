@@ -14,7 +14,7 @@ class POEScraper
     }
 
   # If the thread contains one of these words we assume it is not a guide.
-  @@banned_words = ["help", "question", "input", "someone", "?", "theorycraft", "1.3", "discussion"]
+  @@banned_words = ["help", "question", "input", "someone", "?", "theorycraft", "1.3", "discussion", "advice"]
 
   def initialize
     @agent = Mechanize.new
